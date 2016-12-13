@@ -47,11 +47,11 @@ The default is "udp icmp tcp".
 
 =head1 EXAMPLES
 
-multiping oak.rsn.hp.com
+multiping myhost
 
-multiping -p "http udp" oak.rsn.hp.com
+multiping -p "http udp" myhost
 
-multiping -p "http udp" oak.rsn.hp.com momo-o1.rsn.hp.com  momo-o2.rsn.hp.com
+multiping -p "http udp" myhost1 myhost2 myhost3
 
 =cut
 
@@ -92,8 +92,9 @@ sub main
 	@protolist = split(/\s+/,$protostring);
     }
 
-    croak "must be root to do icmp checks"
-	if (grep (/icmp/, @protolist) && $UID != 0);
+    # doesn't work on cygwin
+    croak "must be root to do icmp checks on nonWin systems"
+	if (grep (/icmp/, @protolist) && $UID != 0 && $OSNAME !~ /cygwin/);
 
     my $rByP = ping_list_by_proto( \@hostlist, \@protolist);
     print Data::Dumper->Dump([$rByP], [qw(rByP)])
