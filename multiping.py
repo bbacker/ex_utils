@@ -3,6 +3,10 @@
 import argparse
 import re
 import pyping
+import sys
+
+def printfcrude(format, *args):
+	sys.stdout.write(format % args)
 
 parser = argparse.ArgumentParser(description='check via various protocols if servers respond')
 parser.add_argument('-p','--protocols', help="list of protocols to use", action='append')
@@ -14,9 +18,9 @@ parser.add_argument('hosts', help="list of hosts to check", nargs='*')
 
 args = parser.parse_args()
 
-print ("protocols=%s" , args.protocols)
+printfcrude ("protocols=%s" , args.protocols)
 
-print ("hosts=" , args.hosts)
+printfcrude ("hosts=%s" , args.hosts)
 
 
 for host in args.hosts :
@@ -25,7 +29,7 @@ for host in args.hosts :
             r = pyping.ping(host)
 
             if r.ret_code == 0:
-                print ("%s ping = yes", host)
+                printfcrude ("%s ping = yes", host)
             else:
-                print ("% ping = no", host)
+                printfcrude ("% ping = no", host)
 
